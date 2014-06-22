@@ -26,11 +26,14 @@
 
 (require 'helm)
 
-(defvar helm-c-source-ghq
+(defun helm-ghq--init ()
+  (with-current-buffer (helm-candidate-buffer 'global)
+    (unless (zerop (call-process "ghq" nil t nil "list" "--full-path"))
+      (error "Failed: 'ghq list --full-path'"))))
+
+(defvar helm-ghq-source
   '((name . "ghq list")
-    (init . (lambda ()
-	      (helm-init-candidates-in-buffer 'global
-		(shell-command-to-string "ghq list --full-path"))))
+    (init . helm-ghq--init)
     (candidates-in-buffer)
     (action . find-file)))
 
@@ -38,6 +41,7 @@
 (defun helm-ghq ()
   "Find file results of `ghq list'."
   (interactive)
-  (helm '(helm-c-source-ghq) nil "Find file: " nil nil))
+  (helm :sources '(helm-ghq-source) :prompt "Find file: "
+        :buffer "*helm-ghq*"))
 
 (provide 'helm-ghq)
