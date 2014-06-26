@@ -65,6 +65,7 @@
       (candidates-in-buffer)
       (action . (("Open File" . find-file)
                  ("Open File other window" . find-file-other-window)
+                 ("Open File other frame" . find-file-other-frame)
                  ("Open Directory" . helm-ghq--open-dired))))))
 
 ;;;###autoload
