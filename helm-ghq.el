@@ -68,7 +68,7 @@
                  ("Open Directory" . helm-ghq--open-dired))))))
 
 ;;;###autoload
-(defun helm-ghq-list ()
+(defun helm-ghq ()
   (interactive)
   (let ((repo (helm-comp-read "ghq-list: "
                               (helm-ghq--list-candidates)
