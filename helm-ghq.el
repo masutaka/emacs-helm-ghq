@@ -55,8 +55,9 @@
 
 (defun helm-ghq--list-ls-files ()
   (with-current-buffer (helm-candidate-buffer 'global)
-    (unless (zerop (call-process "git" nil t nil "ls-files"))
-      (error "Failed: 'git ls-files'"))))
+    (unless (or (zerop (call-process "git" nil '(t nil) nil "ls-files"))
+		(zerop (call-process "hg" nil t nil "manifest")))
+      (error "Failed: 'git ls-files | hg manifest'"))))
 
 (defun helm-ghq--source (repo)
   (let ((name (file-name-nondirectory (directory-file-name repo))))
