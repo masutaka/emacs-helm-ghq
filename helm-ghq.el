@@ -68,6 +68,22 @@
                  ("Open File other frame" . find-file-other-frame)
                  ("Open Directory" . helm-ghq--open-dired))))))
 
+(defun helm-ghq--repo-to-user-project (repo)
+  (cond ((string-match "github.com/\\(.+\\)" repo)
+         (match-string-no-properties 1 repo))
+        ((string-match "code.google.com/\\(.+\\)" repo)
+         (match-string-no-properties 1 repo))))
+
+(defun helm-ghq--update-repository (repo)
+  (let ((user-project (helm-ghq--repo-to-user-project repo)))
+    (async-shell-command (concat "ghq get -u " user-project))))
+
+(defun helm-ghq--source-update (repo)
+  `((name . "Update Repository")
+    (candidates . (" ")) ;; dummy
+    (action . (lambda (_c)
+                (helm-ghq--update-repository ,repo)))))
+
 ;;;###autoload
 (defun helm-ghq ()
   (interactive)
@@ -76,7 +92,8 @@
                               :name "ghq list"
                               :must-match t)))
     (let ((default-directory (file-name-as-directory repo)))
-      (helm :sources (helm-ghq--source default-directory)
+      (helm :sources (list (helm-ghq--source default-directory)
+                           (helm-ghq--source-update repo))
             :buffer "*helm-ghq-list*"))))
 
 (provide 'helm-ghq)
