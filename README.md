@@ -24,3 +24,11 @@ You can install `helm-ghq.el` from [MELPA](https://github.com/milkypostman/melpa
 
 Execute with `ghq list --full-path` command. You can select a
 directory from the results.
+
+### `helm-for-files`
+
+Require the following configuration.
+
+```lisp
+(add-to-list 'helm-for-files-preferred-list 'helm-source-ghq)
+```
