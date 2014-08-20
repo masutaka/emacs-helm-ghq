@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'helm)
+(require 'helm-mode)
 
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
