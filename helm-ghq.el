@@ -26,9 +26,27 @@
 
 (require 'helm)
 (require 'helm-mode)
+(require 'helm-files)
 
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
+
+(defvar helm-source-ghq
+  `((name . "ghq")
+    (candidates . helm-ghq--list-candidates)
+    (match . helm-files-match-only-basename)
+    (filtered-candidate-transformer
+     . (lambda (candidates _source)
+         (cl-loop for i in candidates
+                  if helm-ff-transformer-show-only-basename
+                  collect (cons (helm-basename i) i)
+                  else collect i)))
+    (keymap . ,helm-generic-files-map)
+    (help-message . helm-generic-file-help-message)
+    (mode-line . helm-generic-file-mode-line-string)
+    (action . ,(cdr (helm-get-actions-from-type
+                     helm-source-locate))))
+  "Helm source for ghq.")
 
 (defmacro helm-ghq--line-string ()
   `(buffer-substring-no-properties
