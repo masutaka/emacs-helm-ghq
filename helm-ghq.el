@@ -54,10 +54,10 @@
 
 (defun helm-ghq--root ()
   (with-temp-buffer
-    (unless (zerop (call-process "git" nil t nil "config" "ghq.root"))
-      (error "Failed: Can't find ghq.root"))
+    (unless (zerop (process-file "ghq" nil t nil "root"))
+      (error "Failed: 'ghq root'"))
     (goto-char (point-min))
-    (expand-file-name (helm-ghq--line-string))))
+    (helm-current-line-contents)))
 
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
