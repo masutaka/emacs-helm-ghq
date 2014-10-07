@@ -52,12 +52,21 @@
   `(buffer-substring-no-properties
     (line-beginning-position) (line-end-position)))
 
+(defun helm-ghq--root-fallback ()
+  (erase-buffer)
+  (unless (zerop (process-file "git" nil t nil "config" "ghq.root"))
+    (error "Failed: Can't find ghq.root"))
+  (goto-char (point-min))
+  (expand-file-name (helm-ghq--line-string)))
+
 (defun helm-ghq--root ()
   (with-temp-buffer
-    (unless (zerop (process-file "ghq" nil t nil "root"))
-      (error "Failed: 'ghq root'"))
+    (process-file "ghq" nil t nil "root")
     (goto-char (point-min))
-    (helm-current-line-contents)))
+    (let ((output (helm-ghq--line-string)))
+      (if (string-match-p "\\`No help topic" output)
+          (helm-ghq--root-fallback)
+        (expand-file-name output)))))
 
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
