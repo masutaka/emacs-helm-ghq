@@ -1,4 +1,4 @@
-# helm-ghq.el
+# helm-ghq.el [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
 ## Introduction
 
@@ -32,3 +32,8 @@ Require the following configuration.
 ```lisp
 (add-to-list 'helm-for-files-preferred-list 'helm-source-ghq)
 ```
+
+[melpa-link]: http://melpa.org/#/helm-ghq
+[melpa-stable-link]: http://stable.melpa.org/#/helm-ghq
+[melpa-badge]: http://melpa.org/packages/helm-ghq-badge.svg
+[melpa-stable-badge]: http://stable.melpa.org/packages/helm-ghq-badge.svg
