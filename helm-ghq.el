@@ -34,7 +34,6 @@
 (defvar helm-source-ghq
   `((name . "ghq")
     (candidates . helm-ghq--list-candidates)
-    (match . helm-files-match-only-basename)
     (filtered-candidate-transformer
      . (lambda (candidates _source)
          (cl-loop for i in candidates
