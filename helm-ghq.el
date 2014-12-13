@@ -31,6 +31,12 @@
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
+(defvar helm-ghq--action
+  '(("Open File" . find-file)
+    ("Open File other window" . find-file-other-window)
+    ("Open File other frame" . find-file-other-frame)
+    ("Open Directory" . helm-ghq--open-dired)))
+
 (defvar helm-source-ghq
   `((name . "ghq")
     (candidates . helm-ghq--list-candidates)
@@ -44,10 +50,7 @@
     (keymap . ,helm-generic-files-map)
     (help-message . helm-generic-file-help-message)
     (mode-line . helm-generic-file-mode-line-string)
-    (action . (("Open File" . find-file)
-	       ("Open File other window" . find-file-other-window)
-	       ("Open File other frame" . find-file-other-frame)
-	       ("Open Directory" . helm-ghq--open-dired))))
+    (action . ,helm-ghq--action))
   "Helm source for ghq.")
 
 (defun helm-ghq--files-match-only-basename (candidate)
@@ -111,10 +114,7 @@ even is \" -b\" is specified."
     `((name . ,name)
       (init . helm-ghq--list-ls-files)
       (candidates-in-buffer)
-      (action . (("Open File" . find-file)
-                 ("Open File other window" . find-file-other-window)
-                 ("Open File other frame" . find-file-other-frame)
-                 ("Open Directory" . helm-ghq--open-dired))))))
+      (action . ,helm-ghq--action))))
 
 (defun helm-ghq--repo-to-user-project (repo)
   (cond ((string-match "github.com/\\(.+\\)" repo)
