@@ -44,8 +44,10 @@
     (keymap . ,helm-generic-files-map)
     (help-message . helm-generic-file-help-message)
     (mode-line . helm-generic-file-mode-line-string)
-    (action . ,(cdr (helm-get-actions-from-type
-                     helm-source-locate))))
+    (action . (("Open File" . find-file)
+	       ("Open File other window" . find-file-other-window)
+	       ("Open File other frame" . find-file-other-frame)
+	       ("Open Directory" . helm-ghq--open-dired))))
   "Helm source for ghq.")
 
 (defun helm-ghq--files-match-only-basename (candidate)
