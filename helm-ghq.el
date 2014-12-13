@@ -34,6 +34,7 @@
 (defvar helm-source-ghq
   `((name . "ghq")
     (candidates . helm-ghq--list-candidates)
+    (match . helm-ghq--files-match-only-basename)
     (filtered-candidate-transformer
      . (lambda (candidates _source)
          (cl-loop for i in candidates
@@ -46,6 +47,23 @@
     (action . ,(cdr (helm-get-actions-from-type
                      helm-source-locate))))
   "Helm source for ghq.")
+
+(defun helm-ghq--files-match-only-basename (candidate)
+  "Allow matching only basename of file when \" -b\" is added at end of pattern.
+If pattern contain one or more spaces, fallback to match-plugin
+even is \" -b\" is specified."
+  (let ((source (helm-get-current-source)))
+    (if (string-match "\\([^ ]*\\) -b\\'" helm-pattern)
+        (progn
+          (helm-attrset 'no-matchplugin nil source)
+          (string-match (match-string 1 helm-pattern)
+                        (helm-basename candidate)))
+      ;; Disable no-matchplugin by side effect.
+      (helm-aif (assq 'no-matchplugin source)
+          (setq source (delete it source)))
+      (string-match
+       (replace-regexp-in-string " -b\\'" "" helm-pattern)
+       candidate))))
 
 (defmacro helm-ghq--line-string ()
   `(buffer-substring-no-properties
