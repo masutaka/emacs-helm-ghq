@@ -5,7 +5,7 @@
 ;; Author: Takashi Masuda <masutaka.net@gmail.com>
 ;; URL: https://github.com/masutaka/emacs-helm-ghq
 ;; Version: 1.4.0
-;; Package-Requires: ((helm "1.6.2"))
+;; Package-Requires: ((helm "1.6.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -31,10 +31,16 @@
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
+(defvar helm-ghq--action
+  '(("Open File" . find-file)
+    ("Open File other window" . find-file-other-window)
+    ("Open File other frame" . find-file-other-frame)
+    ("Open Directory" . helm-ghq--open-dired)))
+
 (defvar helm-source-ghq
   `((name . "ghq")
     (candidates . helm-ghq--list-candidates)
-    (match . helm-files-match-only-basename)
+    (match . helm-ghq--files-match-only-basename)
     (filtered-candidate-transformer
      . (lambda (candidates _source)
          (cl-loop for i in candidates
@@ -44,9 +50,25 @@
     (keymap . ,helm-generic-files-map)
     (help-message . helm-generic-file-help-message)
     (mode-line . helm-generic-file-mode-line-string)
-    (action . ,(cdr (helm-get-actions-from-type
-                     helm-source-locate))))
+    (action . ,helm-ghq--action))
   "Helm source for ghq.")
+
+(defun helm-ghq--files-match-only-basename (candidate)
+  "Allow matching only basename of file when \" -b\" is added at end of pattern.
+If pattern contain one or more spaces, fallback to match-plugin
+even is \" -b\" is specified."
+  (let ((source (helm-get-current-source)))
+    (if (string-match "\\([^ ]*\\) -b\\'" helm-pattern)
+        (progn
+          (helm-attrset 'no-matchplugin nil source)
+          (string-match (match-string 1 helm-pattern)
+                        (helm-basename candidate)))
+      ;; Disable no-matchplugin by side effect.
+      (helm-aif (assq 'no-matchplugin source)
+          (setq source (delete it source)))
+      (string-match
+       (replace-regexp-in-string " -b\\'" "" helm-pattern)
+       candidate))))
 
 (defmacro helm-ghq--line-string ()
   `(buffer-substring-no-properties
@@ -92,10 +114,7 @@
     `((name . ,name)
       (init . helm-ghq--list-ls-files)
       (candidates-in-buffer)
-      (action . (("Open File" . find-file)
-                 ("Open File other window" . find-file-other-window)
-                 ("Open File other frame" . find-file-other-frame)
-                 ("Open Directory" . helm-ghq--open-dired))))))
+      (action . ,helm-ghq--action))))
 
 (defun helm-ghq--repo-to-user-project (repo)
   (cond ((string-match "github.com/\\(.+\\)" repo)
