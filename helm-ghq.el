@@ -45,8 +45,8 @@
      . (lambda (candidates _source)
          (cl-loop for i in candidates
                   if helm-ff-transformer-show-only-basename
-                  collect (cons (helm-basename i) i)
-                  else collect i)))
+                  collect i
+                  else collect (cons (cdr i) (cdr i)))))
     (keymap . ,helm-generic-files-map)
     (help-message . helm-generic-file-help-message)
     (mode-line . helm-generic-file-mode-line-string)
