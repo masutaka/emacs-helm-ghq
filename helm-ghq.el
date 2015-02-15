@@ -41,12 +41,11 @@
   `((name . "ghq")
     (candidates . helm-ghq--list-candidates)
     (match . helm-ghq--files-match-only-basename)
-    (filtered-candidate-transformer
-     . (lambda (candidates _source)
-         (cl-loop for i in candidates
-                  if helm-ff-transformer-show-only-basename
-                  collect i
-                  else collect (cons (cdr i) (cdr i)))))
+    (filter-one-by-one
+     . (lambda (candidate)
+         (if helm-ff-transformer-show-only-basename
+           candidate
+           (cons (cdr candidate) (cdr candidate)))))
     (keymap . ,helm-generic-files-map)
     (help-message . helm-generic-file-help-message)
     (mode-line . helm-generic-file-mode-line-string)
