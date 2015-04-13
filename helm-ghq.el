@@ -92,7 +92,7 @@ even is \" -b\" is specified."
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
     (unless (zerop (call-process "ghq" nil t nil "list" "--full-path"))
-      (error "Failed: ghq list --full-path'"))
+      (error "Failed: ghq list --full-path"))
     (let ((ghq-root (helm-ghq--root))
           paths)
       (goto-char (point-min))
@@ -106,7 +106,7 @@ even is \" -b\" is specified."
   (with-current-buffer (helm-candidate-buffer 'global)
     (unless (or (zerop (call-process "git" nil '(t nil) nil "ls-files"))
 		(zerop (call-process "hg" nil t nil "manifest")))
-      (error "Failed: 'git ls-files | hg manifest'"))))
+      (error "Failed: git ls-files | hg manifest"))))
 
 (defun helm-ghq--source (repo)
   (let ((name (file-name-nondirectory (directory-file-name repo))))
