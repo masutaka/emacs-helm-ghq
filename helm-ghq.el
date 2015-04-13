@@ -1,6 +1,6 @@
 ;;; helm-ghq.el --- ghq with helm interface
 
-;; Copyright (C) 2014 by Takashi Masuda
+;; Copyright (C) 2015 by Takashi Masuda
 
 ;; Author: Takashi Masuda <masutaka.net@gmail.com>
 ;; URL: https://github.com/masutaka/emacs-helm-ghq
@@ -21,6 +21,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+;; helm-ghq.el provides a helm interface to "ghq".
 
 ;;; Code:
 
@@ -144,3 +145,5 @@ even is \" -b\" is specified."
             :buffer "*helm-ghq-list*"))))
 
 (provide 'helm-ghq)
+
+;;; helm-ghq.el ends here
