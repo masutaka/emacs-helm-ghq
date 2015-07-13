@@ -1,4 +1,4 @@
-;;; helm-ghq.el --- ghq with helm interface
+;;; helm-ghq.el --- ghq with helm interface -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2015 by Takashi Masuda
 
