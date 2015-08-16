@@ -49,7 +49,6 @@
            (cons (cdr candidate) (cdr candidate)))))
     (keymap . ,helm-generic-files-map)
     (help-message . helm-generic-file-help-message)
-    (mode-line . helm-generic-file-mode-line-string)
     (action . ,helm-ghq--action))
   "Helm source for ghq.")
 
