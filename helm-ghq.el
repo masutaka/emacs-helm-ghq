@@ -39,17 +39,16 @@
     ("Open Directory" . helm-ghq--open-dired)))
 
 (defvar helm-source-ghq
-  `((name . "ghq")
-    (candidates . helm-ghq--list-candidates)
-    (match . helm-ghq--files-match-only-basename)
-    (filter-one-by-one
-     . (lambda (candidate)
-         (if helm-ff-transformer-show-only-basename
-           candidate
-           (cons (cdr candidate) (cdr candidate)))))
-    (keymap . ,helm-generic-files-map)
-    (help-message . helm-generic-file-help-message)
-    (action . ,helm-ghq--action))
+  (helm-build-sync-source "ghq"
+    :candidates #'helm-ghq--list-candidates
+    :match #'helm-ghq--files-match-only-basename
+    :filter-one-by-one (lambda (candidate)
+                         (if helm-ff-transformer-show-only-basename
+                             candidate
+                           (cons (cdr candidate) (cdr candidate))))
+    :keymap helm-generic-files-map
+    :help-message helm-generic-file-help-message
+    :action helm-ghq--action)
   "Helm source for ghq.")
 
 (defun helm-ghq--files-match-only-basename (candidate)
@@ -110,10 +109,9 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--source (repo)
   (let ((name (file-name-nondirectory (directory-file-name repo))))
-    `((name . ,name)
-      (init . helm-ghq--list-ls-files)
-      (candidates-in-buffer)
-      (action . ,helm-ghq--action))))
+    (helm-build-in-buffer-source name
+      :init #'helm-ghq--list-ls-files
+      :action helm-ghq--action)))
 
 (defun helm-ghq--repo-to-user-project (repo)
   (cond ((string-match "github.com/\\(.+\\)" repo)
@@ -126,10 +124,10 @@ even is \" -b\" is specified."
     (async-shell-command (concat "ghq get -u " user-project))))
 
 (defun helm-ghq--source-update (repo)
-  `((name . "Update Repository")
-    (candidates . (" ")) ;; dummy
-    (action . (lambda (_c)
-                (helm-ghq--update-repository ,repo)))))
+  (helm-build-sync-source "Update Repository"
+    :candidates '(" ") ; dummy
+    :action (lambda (_c)
+              (helm-ghq--update-repository repo))))
 
 ;;;###autoload
 (defun helm-ghq ()
