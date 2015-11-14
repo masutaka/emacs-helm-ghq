@@ -127,7 +127,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--update-repository (repo)
   (let ((user-project (helm-ghq--repo-to-user-project repo)))
-    (async-shell-command (concat "ghq get -u " user-project))))
+    (async-shell-command (concat helm-ghq-ghq-executable " get -u " user-project))))
 
 (defun helm-ghq--source-update (repo)
   (helm-build-sync-source "Update Repository"
