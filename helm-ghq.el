@@ -32,6 +32,12 @@
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
+(defcustom helm-ghq-ghq-executable
+  "ghq"
+  "Name of the ghq executable to use."
+  :type 'string
+  :group 'helm-ghq)
+
 (defvar helm-ghq--action
   '(("Open File" . find-file)
     ("Open File other window" . find-file-other-window)
@@ -81,7 +87,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--root ()
   (with-temp-buffer
-    (process-file "ghq" nil t nil "root")
+    (process-file helm-ghq-ghq-executable nil t nil "root")
     (goto-char (point-min))
     (let ((output (helm-ghq--line-string)))
       (if (string-match-p "\\`No help topic" output)
@@ -90,7 +96,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
-    (unless (zerop (call-process "ghq" nil t nil "list" "--full-path"))
+    (unless (zerop (call-process helm-ghq-ghq-executable nil t nil "list" "--full-path"))
       (error "Failed: ghq list --full-path"))
     (let ((ghq-root (helm-ghq--root))
           paths)
