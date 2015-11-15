@@ -76,6 +76,12 @@
   :type 'string
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-hg-arg-ls-files
+  '("manifest")
+  "*Arguments for getting file list in hg repository"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
@@ -155,7 +161,8 @@ even is \" -b\" is specified."
   (with-current-buffer (helm-candidate-buffer 'global)
     (unless (or (zerop (apply #'call-process
 			      helm-ghq-command-git nil '(t nil) nil helm-ghq-command-git-arg-ls-files))
-		(zerop (call-process helm-ghq-command-hg nil t nil "manifest")))
+		(zerop (apply #'call-process
+			      helm-ghq-command-hg nil t nil helm-ghq-command-hg-arg-ls-files)))
       (error "Failed: git ls-files | hg manifest"))))
 
 (defun helm-ghq--source (repo)
