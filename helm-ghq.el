@@ -52,6 +52,12 @@
   :type '(repeqt string)
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-ghq-arg-update-repo
+  '("get" "-u")
+  "*Arguments for updating a repository"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defcustom helm-ghq-command-git
   "git"
   "*A git command"
@@ -177,9 +183,18 @@ even is \" -b\" is specified."
         ((string-match "code.google.com/\\(.+\\)" repo)
          (match-string-no-properties 1 repo))))
 
+(defsubst hel-ghq--concat-as-command (args)
+  (mapconcat 'identity args " "))
+
 (defun helm-ghq--update-repository (repo)
-  (let ((user-project (helm-ghq--repo-to-user-project repo)))
-    (async-shell-command (concat helm-ghq-command-ghq " get -u " user-project))))
+  (let* ((user-project (helm-ghq--repo-to-user-project repo))
+	 (command (hel-ghq--concat-as-command
+		   (list
+		    helm-ghq-command-ghq
+		    (hel-ghq--concat-as-command
+		     helm-ghq-command-ghq-arg-update-repo)
+		    user-project))))
+    (async-shell-command command)))
 
 (defun helm-ghq--source-update (repo)
   (helm-build-sync-source "Update Repository"
