@@ -136,7 +136,7 @@ even is \" -b\" is specified."
   (unless (zerop (apply #'process-file
 			helm-ghq-command-git nil t nil
 			helm-ghq-command-git-arg-root))
-    (error "Failed: Can't find ghq.root"))
+    (error "Failed: Can't find ghq root"))
   (goto-char (point-min))
   (expand-file-name (helm-ghq--line-string)))
 
@@ -156,7 +156,7 @@ even is \" -b\" is specified."
     (unless (zerop (apply #'call-process
 			  helm-ghq-command-ghq nil t nil
 			  helm-ghq-command-ghq-arg-list))
-      (error "Failed: ghq list --full-path"))
+      (error "Failed: Can't get ghq list candidates"))
     (let ((ghq-root (helm-ghq--root))
           paths)
       (goto-char (point-min))
@@ -174,7 +174,7 @@ even is \" -b\" is specified."
 		(zerop (apply #'call-process
 			      helm-ghq-command-hg nil t nil
 			      helm-ghq-command-hg-arg-ls-files)))
-      (error "Failed: git ls-files | hg manifest"))))
+      (error "Failed: Can't get file list candidates"))))
 
 (defun helm-ghq--source (repo)
   (let ((name (file-name-nondirectory (directory-file-name repo))))
