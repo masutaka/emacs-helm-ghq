@@ -52,6 +52,12 @@
   :type 'string
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-git-arg-root
+  '("config" "ghq.root")
+  "*Arguments for getting ghq root path using git command"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defcustom helm-ghq-command-hg
   "hg"
   "*A hg command"
@@ -103,7 +109,8 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--root-fallback ()
   (erase-buffer)
-  (unless (zerop (process-file helm-ghq-command-git nil t nil "config" "ghq.root"))
+  (unless (zerop (apply #'process-file
+			helm-ghq-command-git nil t nil helm-ghq-command-git-arg-root))
     (error "Failed: Can't find ghq.root"))
   (goto-char (point-min))
   (expand-file-name (helm-ghq--line-string)))
