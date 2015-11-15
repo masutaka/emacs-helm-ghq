@@ -166,7 +166,7 @@ even is \" -b\" is specified."
         (forward-line 1))
       (reverse paths))))
 
-(defun helm-ghq--list-ls-files ()
+(defun helm-ghq--ls-files ()
   (with-current-buffer (helm-candidate-buffer 'global)
     (unless (or (zerop (apply #'call-process
 			      helm-ghq-command-git nil '(t nil) nil
@@ -179,7 +179,7 @@ even is \" -b\" is specified."
 (defun helm-ghq--source (repo)
   (let ((name (file-name-nondirectory (directory-file-name repo))))
     (helm-build-in-buffer-source name
-      :init #'helm-ghq--list-ls-files
+      :init #'helm-ghq--ls-files
       :action helm-ghq--action)))
 
 (defun helm-ghq--repo-to-user-project (repo)
