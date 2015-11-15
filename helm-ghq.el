@@ -40,6 +40,12 @@
   :type 'string
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-ghq-arg-root
+  '("root")
+  "*Arguments for getting ghq root path using ghq command"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defcustom helm-ghq-command-git
   "git"
   "*A git command"
@@ -104,7 +110,8 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--root ()
   (with-temp-buffer
-    (process-file helm-ghq-command-ghq nil t nil "root")
+    (apply #'process-file
+	   helm-ghq-command-ghq nil t nil helm-ghq-command-ghq-arg-root)
     (goto-char (point-min))
     (let ((output (helm-ghq--line-string)))
       (if (string-match-p "\\`No help topic" output)
