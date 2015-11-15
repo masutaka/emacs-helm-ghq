@@ -34,7 +34,7 @@
 
 (defcustom helm-ghq-command-ghq
   "ghq"
-  "Name of the ghq executable to use."
+  "*A ghq command"
   :type 'string
   :group 'helm-ghq)
 
