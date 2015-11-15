@@ -29,14 +29,19 @@
 (require 'helm-mode)
 (require 'helm-files)
 
-(defun helm-ghq--open-dired (file)
-  (dired (file-name-directory file)))
+(defgroup helm-ghq nil
+  "ghq with helm interface"
+  :prefix "helm-ghq-"
+  :group 'helm)
 
 (defcustom helm-ghq-command-ghq
   "ghq"
   "*A ghq command"
   :type 'string
   :group 'helm-ghq)
+
+(defun helm-ghq--open-dired (file)
+  (dired (file-name-directory file)))
 
 (defvar helm-ghq--action
   '(("Open File" . find-file)
