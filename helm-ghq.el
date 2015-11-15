@@ -134,7 +134,8 @@ even is \" -b\" is specified."
 (defun helm-ghq--root-fallback ()
   (erase-buffer)
   (unless (zerop (apply #'process-file
-			helm-ghq-command-git nil t nil helm-ghq-command-git-arg-root))
+			helm-ghq-command-git nil t nil
+			helm-ghq-command-git-arg-root))
     (error "Failed: Can't find ghq.root"))
   (goto-char (point-min))
   (expand-file-name (helm-ghq--line-string)))
@@ -142,7 +143,8 @@ even is \" -b\" is specified."
 (defun helm-ghq--root ()
   (with-temp-buffer
     (apply #'process-file
-	   helm-ghq-command-ghq nil t nil helm-ghq-command-ghq-arg-root)
+	   helm-ghq-command-ghq nil t nil
+	   helm-ghq-command-ghq-arg-root)
     (goto-char (point-min))
     (let ((output (helm-ghq--line-string)))
       (if (string-match-p "\\`No help topic" output)
@@ -152,7 +154,8 @@ even is \" -b\" is specified."
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
     (unless (zerop (apply #'call-process
-			  helm-ghq-command-ghq nil t nil helm-ghq-command-ghq-arg-list))
+			  helm-ghq-command-ghq nil t nil
+			  helm-ghq-command-ghq-arg-list))
       (error "Failed: ghq list --full-path"))
     (let ((ghq-root (helm-ghq--root))
           paths)
@@ -166,9 +169,11 @@ even is \" -b\" is specified."
 (defun helm-ghq--list-ls-files ()
   (with-current-buffer (helm-candidate-buffer 'global)
     (unless (or (zerop (apply #'call-process
-			      helm-ghq-command-git nil '(t nil) nil helm-ghq-command-git-arg-ls-files))
+			      helm-ghq-command-git nil '(t nil) nil
+			      helm-ghq-command-git-arg-ls-files))
 		(zerop (apply #'call-process
-			      helm-ghq-command-hg nil t nil helm-ghq-command-hg-arg-ls-files)))
+			      helm-ghq-command-hg nil t nil
+			      helm-ghq-command-hg-arg-ls-files)))
       (error "Failed: git ls-files | hg manifest"))))
 
 (defun helm-ghq--source (repo)
