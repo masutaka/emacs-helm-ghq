@@ -29,6 +29,17 @@
 (require 'helm-mode)
 (require 'helm-files)
 
+(defgroup helm-ghq nil
+  "ghq with helm interface"
+  :prefix "helm-ghq-"
+  :group 'helm)
+
+(defcustom helm-ghq-command-ghq
+  "ghq"
+  "*A ghq command"
+  :type 'string
+  :group 'helm-ghq)
+
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
@@ -81,7 +92,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--root ()
   (with-temp-buffer
-    (process-file "ghq" nil t nil "root")
+    (process-file helm-ghq-command-ghq nil t nil "root")
     (goto-char (point-min))
     (let ((output (helm-ghq--line-string)))
       (if (string-match-p "\\`No help topic" output)
@@ -90,7 +101,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
-    (unless (zerop (call-process "ghq" nil t nil "list" "--full-path"))
+    (unless (zerop (call-process helm-ghq-command-ghq nil t nil "list" "--full-path"))
       (error "Failed: ghq list --full-path"))
     (let ((ghq-root (helm-ghq--root))
           paths)
@@ -121,7 +132,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--update-repository (repo)
   (let ((user-project (helm-ghq--repo-to-user-project repo)))
-    (async-shell-command (concat "ghq get -u " user-project))))
+    (async-shell-command (concat helm-ghq-command-ghq " get -u " user-project))))
 
 (defun helm-ghq--source-update (repo)
   (helm-build-sync-source "Update Repository"
