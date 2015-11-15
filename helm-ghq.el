@@ -40,6 +40,12 @@
   :type 'string
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-git
+  "git"
+  "*A git command"
+  :type 'string
+  :group 'helm-ghq)
+
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
@@ -85,7 +91,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--root-fallback ()
   (erase-buffer)
-  (unless (zerop (process-file "git" nil t nil "config" "ghq.root"))
+  (unless (zerop (process-file helm-ghq-command-git nil t nil "config" "ghq.root"))
     (error "Failed: Can't find ghq.root"))
   (goto-char (point-min))
   (expand-file-name (helm-ghq--line-string)))
@@ -114,7 +120,7 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--list-ls-files ()
   (with-current-buffer (helm-candidate-buffer 'global)
-    (unless (or (zerop (call-process "git" nil '(t nil) nil "ls-files"))
+    (unless (or (zerop (call-process helm-ghq-command-git nil '(t nil) nil "ls-files"))
 		(zerop (call-process "hg" nil t nil "manifest")))
       (error "Failed: git ls-files | hg manifest"))))
 
