@@ -46,6 +46,12 @@
   :type '(repeqt string)
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-ghq-arg-list
+  '("list" "--full-path")
+  "*Arguments for getting ghq list"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defcustom helm-ghq-command-git
   "git"
   "*A git command"
@@ -127,7 +133,8 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
-    (unless (zerop (call-process helm-ghq-command-ghq nil t nil "list" "--full-path"))
+    (unless (zerop (apply #'call-process
+			  helm-ghq-command-ghq nil t nil helm-ghq-command-ghq-arg-list))
       (error "Failed: ghq list --full-path"))
     (let ((ghq-root (helm-ghq--root))
           paths)
