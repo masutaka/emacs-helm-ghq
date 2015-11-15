@@ -40,6 +40,54 @@
   :type 'string
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-ghq-arg-root
+  '("root")
+  "*Arguments for getting ghq root path using ghq command"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-ghq-arg-list
+  '("list" "--full-path")
+  "*Arguments for getting ghq list"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-ghq-arg-update-repo
+  '("get" "-u")
+  "*Arguments for updating a repository"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-git
+  "git"
+  "*A git command"
+  :type 'string
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-git-arg-root
+  '("config" "ghq.root")
+  "*Arguments for getting ghq root path using git command"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-git-arg-ls-files
+  '("ls-files")
+  "*Arguments for getting file list in git repository"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-hg
+  "hg"
+  "*A hg command"
+  :type 'string
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-hg-arg-ls-files
+  '("manifest")
+  "*Arguments for getting file list in hg repository"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
@@ -85,14 +133,18 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--root-fallback ()
   (erase-buffer)
-  (unless (zerop (process-file "git" nil t nil "config" "ghq.root"))
-    (error "Failed: Can't find ghq.root"))
+  (unless (zerop (apply #'process-file
+			helm-ghq-command-git nil t nil
+			helm-ghq-command-git-arg-root))
+    (error "Failed: Can't find ghq root"))
   (goto-char (point-min))
   (expand-file-name (helm-ghq--line-string)))
 
 (defun helm-ghq--root ()
   (with-temp-buffer
-    (process-file helm-ghq-command-ghq nil t nil "root")
+    (apply #'process-file
+	   helm-ghq-command-ghq nil t nil
+	   helm-ghq-command-ghq-arg-root)
     (goto-char (point-min))
     (let ((output (helm-ghq--line-string)))
       (if (string-match-p "\\`No help topic" output)
@@ -101,8 +153,10 @@ even is \" -b\" is specified."
 
 (defun helm-ghq--list-candidates ()
   (with-temp-buffer
-    (unless (zerop (call-process helm-ghq-command-ghq nil t nil "list" "--full-path"))
-      (error "Failed: ghq list --full-path"))
+    (unless (zerop (apply #'call-process
+			  helm-ghq-command-ghq nil t nil
+			  helm-ghq-command-ghq-arg-list))
+      (error "Failed: Can't get ghq list candidates"))
     (let ((ghq-root (helm-ghq--root))
           paths)
       (goto-char (point-min))
@@ -112,16 +166,20 @@ even is \" -b\" is specified."
         (forward-line 1))
       (reverse paths))))
 
-(defun helm-ghq--list-ls-files ()
+(defun helm-ghq--ls-files ()
   (with-current-buffer (helm-candidate-buffer 'global)
-    (unless (or (zerop (call-process "git" nil '(t nil) nil "ls-files"))
-		(zerop (call-process "hg" nil t nil "manifest")))
-      (error "Failed: git ls-files | hg manifest"))))
+    (unless (or (zerop (apply #'call-process
+			      helm-ghq-command-git nil '(t nil) nil
+			      helm-ghq-command-git-arg-ls-files))
+		(zerop (apply #'call-process
+			      helm-ghq-command-hg nil t nil
+			      helm-ghq-command-hg-arg-ls-files)))
+      (error "Failed: Can't get file list candidates"))))
 
 (defun helm-ghq--source (repo)
   (let ((name (file-name-nondirectory (directory-file-name repo))))
     (helm-build-in-buffer-source name
-      :init #'helm-ghq--list-ls-files
+      :init #'helm-ghq--ls-files
       :action helm-ghq--action)))
 
 (defun helm-ghq--repo-to-user-project (repo)
@@ -130,9 +188,18 @@ even is \" -b\" is specified."
         ((string-match "code.google.com/\\(.+\\)" repo)
          (match-string-no-properties 1 repo))))
 
+(defsubst hel-ghq--concat-as-command (args)
+  (mapconcat 'identity args " "))
+
 (defun helm-ghq--update-repository (repo)
-  (let ((user-project (helm-ghq--repo-to-user-project repo)))
-    (async-shell-command (concat helm-ghq-command-ghq " get -u " user-project))))
+  (let* ((user-project (helm-ghq--repo-to-user-project repo))
+	 (command (hel-ghq--concat-as-command
+		   (list
+		    helm-ghq-command-ghq
+		    (hel-ghq--concat-as-command
+		     helm-ghq-command-ghq-arg-update-repo)
+		    user-project))))
+    (async-shell-command command)))
 
 (defun helm-ghq--source-update (repo)
   (helm-build-sync-source "Update Repository"
