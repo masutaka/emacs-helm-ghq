@@ -10,9 +10,9 @@
 
 ## Requirements
 
-* Emacs 24.3 or higher
-* helm 1.7.6 or higher
-* [ghq](https://github.com/motemen/ghq) 0.6 or higher.
+* Emacs 24.5 or higher
+* helm 1.8.0 or higher
+* [ghq](https://github.com/motemen/ghq) 0.7.1 or higher.
 
 ## Installation
 
