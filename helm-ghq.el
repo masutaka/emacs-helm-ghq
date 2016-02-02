@@ -88,6 +88,18 @@
   :type '(repeqt string)
   :group 'helm-ghq)
 
+(defcustom helm-ghq-command-svn
+  "svn"
+  "*A svn command"
+  :type 'string
+  :group 'helm-ghq)
+
+(defcustom helm-ghq-command-svn-arg-ls-files
+  '("list" "--recursive")
+  "*Arguments for getting files (and directories) list in svn repository"
+  :type '(repeqt string)
+  :group 'helm-ghq)
+
 (defun helm-ghq--open-dired (file)
   (dired (file-name-directory file)))
 
@@ -171,6 +183,9 @@ even is \" -b\" is specified."
     (unless (or (zerop (apply #'call-process
 			      helm-ghq-command-git nil '(t nil) nil
 			      helm-ghq-command-git-arg-ls-files))
+		(zerop (apply #'call-process
+			      helm-ghq-command-svn nil '(t nil) nil
+			      helm-ghq-command-svn-arg-ls-files))
 		(zerop (apply #'call-process
 			      helm-ghq-command-hg nil t nil
 			      helm-ghq-command-hg-arg-ls-files)))
