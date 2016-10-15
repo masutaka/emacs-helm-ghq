@@ -4,7 +4,7 @@
 
 ;; Author: Takashi Masuda <masutaka.net@gmail.com>
 ;; URL: https://github.com/masutaka/emacs-helm-ghq
-;; Version: 1.6.0
+;; Version: 1.7.0
 ;; Package-Requires: ((helm "2.2.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
