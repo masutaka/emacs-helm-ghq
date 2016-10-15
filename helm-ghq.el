@@ -113,10 +113,7 @@
   (helm-build-sync-source "ghq"
     :candidates #'helm-ghq--list-candidates
     :match #'helm-ghq--files-match-only-basename
-    :filter-one-by-one (lambda (candidate)
-			 (if helm-ff-transformer-show-only-basename
-			     (cons (helm-basename candidate) candidate)
-			   candidate))
+    :filter-one-by-one #'helm-ghq--filter-one-by-one
     :keymap helm-generic-files-map
     :help-message helm-generic-file-help-message
     :action helm-ghq--action)
@@ -138,6 +135,11 @@ even is \" -b\" is specified."
       (string-match
        (replace-regexp-in-string " -b\\'" "" helm-pattern)
        candidate))))
+
+(defun helm-ghq--filter-one-by-one (candidate)
+  (if helm-ff-transformer-show-only-basename
+      (cons (helm-basename candidate) candidate)
+    candidate))
 
 (defmacro helm-ghq--line-string ()
   `(buffer-substring-no-properties
