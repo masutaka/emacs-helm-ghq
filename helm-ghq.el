@@ -114,9 +114,9 @@
     :candidates #'helm-ghq--list-candidates
     :match #'helm-ghq--files-match-only-basename
     :filter-one-by-one (lambda (candidate)
-                         (if helm-ff-transformer-show-only-basename
-                             candidate
-                           (cons (cdr candidate) (cdr candidate))))
+			 (if helm-ff-transformer-show-only-basename
+			     (cons (helm-basename candidate) candidate)
+			   candidate))
     :keymap helm-generic-files-map
     :help-message helm-generic-file-help-message
     :action helm-ghq--action)
