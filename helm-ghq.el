@@ -171,12 +171,10 @@ even is \" -b\" is specified."
 			  helm-ghq-command-ghq nil t nil
 			  helm-ghq-command-ghq-arg-list))
       (error "Failed: Can't get ghq list candidates"))
-    (let ((ghq-root (helm-ghq--root))
-          paths)
+    (let ((paths))
       (goto-char (point-min))
       (while (not (eobp))
-        (let ((path (helm-ghq--line-string)))
-          (push (cons (file-relative-name path ghq-root) path) paths))
+	(push (helm-ghq--line-string) paths)
         (forward-line 1))
       (reverse paths))))
 
