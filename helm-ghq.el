@@ -203,15 +203,15 @@ even is \" -b\" is specified."
         ((string-match "code.google.com/\\(.+\\)" repo)
          (match-string-no-properties 1 repo))))
 
-(defsubst hel-ghq--concat-as-command (args)
+(defsubst helm-ghq--concat-as-command (args)
   (mapconcat 'identity args " "))
 
 (defun helm-ghq--update-repository (repo)
   (let* ((user-project (helm-ghq--repo-to-user-project repo))
-	 (command (hel-ghq--concat-as-command
+	 (command (helm-ghq--concat-as-command
 		   (list
 		    helm-ghq-command-ghq
-		    (hel-ghq--concat-as-command
+		    (helm-ghq--concat-as-command
 		     helm-ghq-command-ghq-arg-update-repo)
 		    user-project))))
     (async-shell-command command)))
