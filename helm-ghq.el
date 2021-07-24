@@ -5,7 +5,7 @@
 ;; Author: Takashi Masuda <masutaka.net@gmail.com>
 ;; URL: https://github.com/masutaka/emacs-helm-ghq
 ;; Version: 1.8.0
-;; Package-Requires: ((emacs "24") (helm "2.2.0"))
+;; Package-Requires: ((emacs "24") (helm "3.8.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ even is \" -b\" is specified."
   (let ((source (helm-get-current-source)))
     (if (string-match "\\([^ ]*\\) -b\\'" helm-pattern)
         (progn
-          (helm-attrset 'no-matchplugin nil source)
+          (helm-set-attr 'no-matchplugin nil source)
           (string-match (match-string 1 helm-pattern)
                         (helm-basename candidate)))
       ;; Disable no-matchplugin by side effect.
