@@ -109,6 +109,9 @@
     ("Open File other frame" . find-file-other-frame)
     ("Open Directory" . helm-ghq--open-dired)))
 
+(define-obsolete-variable-alias 'helm-source-ghq
+  'helm-ghq-source "1.8.0")
+
 (defvar helm-ghq-source
   (helm-build-sync-source "ghq"
     :candidates #'helm-ghq--list-candidates
@@ -118,9 +121,6 @@
     :help-message helm-generic-file-help-message
     :action helm-ghq--action)
   "Helm source for ghq.")
-
-(define-obsolete-variable-alias 'helm-source-ghq
-  'helm-ghq-source "1.8.0")
 
 (defun helm-ghq--files-match-only-basename (candidate)
   "Allow matching only basename of file when \" -b\" is added at end of pattern.
