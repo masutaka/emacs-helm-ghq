@@ -30,8 +30,11 @@ You can install `helm-ghq.el` from [MELPA](https://melpa.org) with package.el (`
 
 ### `helm-ghq`
 
-Execute with `ghq list --full-path` command. You can select a
-directory from the results.
+The `ghq list --full-path` command will be executed, after which you can select a directory from the results.
+
+### `helm-ghq-v2`
+
+The `ghq list --full-path` command will be executed, after which you can open the selected directory in Dired mode.
 
 ### `helm-for-files`
 

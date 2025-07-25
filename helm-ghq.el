@@ -227,6 +227,7 @@ even is \" -b\" is specified."
 
 ;;;###autoload
 (defun helm-ghq ()
+  "Select a directory from the results of the ghq command."
   (interactive)
   (let ((repo (helm-comp-read "ghq-list: "
                               (helm-ghq--list-candidates)
