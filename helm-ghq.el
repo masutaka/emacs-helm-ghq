@@ -237,6 +237,15 @@ even is \" -b\" is specified."
                            (helm-ghq--source-update repo))
             :buffer "*helm-ghq-list*"))))
 
+;;;###autoload
+(defun helm-ghq-v2 ()
+  "Open the selected directory from the `ghq` command results in Dired mode."
+  (interactive)
+  (helm :sources 'helm-ghq-source
+	:ff-transformer-show-only-basename nil
+	:buffer "*helm-ghq-list-v2*"
+	:truncate-lines helm-buffers-truncate-lines))
+
 (provide 'helm-ghq)
 
 ;;; helm-ghq.el ends here
