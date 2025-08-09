@@ -2,11 +2,14 @@
 
 [![melpa badge][melpa-badge]][melpa-link]
 [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
+[![Ask DeepWiki][deepwiki-badge]][deepwiki-link]
 
 [melpa-link]: https://melpa.org/#/helm-ghq
 [melpa-stable-link]: https://stable.melpa.org/#/helm-ghq
+[deepwiki-link]: https://deepwiki.com/masutaka/emacs-helm-ghq
 [melpa-badge]: https://melpa.org/packages/helm-ghq-badge.svg
 [melpa-stable-badge]: https://stable.melpa.org/packages/helm-ghq-badge.svg
+[deepwiki-badge]: https://deepwiki.com/badge.svg
 
 ## Introduction
 
